@@ -36,8 +36,26 @@ app.get("/", (req, res) => {
 
 require("./app/routes/book.routes")(app);
 
+/*
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });
+*/
+
+var fs = require('fs');
+var http = require('http');
+var https = require('https');
+var privateKey  = fs.readFileSync('./privatekey.pem', 'utf8');
+var certificate = fs.readFileSync('./server.crt', 'utf8');
+
+var credentials = {key: privateKey, cert: certificate};
+
+// your express configuration here
+
+var httpServer = http.createServer(app);
+var httpsServer = https.createServer(credentials, app);
+
+httpServer.listen(8080);
+httpsServer.listen(8443);
